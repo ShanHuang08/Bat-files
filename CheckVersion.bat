@@ -1,3 +1,4 @@
+@echo off
 set ip=10.184.30.32
 set pwd=ADMIN
 cd C:\Users\Stephenhuang\sum_2.9.0_Win_x86_64
