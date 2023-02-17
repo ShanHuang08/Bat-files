@@ -1,8 +1,9 @@
 chcp 65001
 @echo off
-set ip=10.184.30.32
+set /p ip="ip: "
 set pwd=ADMIN
-cd C:\Users\Stephenhuang\sum_2.9.0_Win_x86_64
+cd /d C:\
+cd C:\Users\Stephenhuang\sum*
 
 if exist Dmi.txt (
     echo delete file
@@ -12,7 +13,7 @@ if exist Dmi.txt (
     )
 
 sum.exe -i %ip% -u ADMIN -p %pwd% -c getdmiinfo --file Dmi.txt
-echo 記事本關閉Command才會跑完
+echo 記事本關閉Command才會關閉
 Dmi.txt
 
 

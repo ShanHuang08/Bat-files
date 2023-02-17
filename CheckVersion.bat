@@ -1,8 +1,14 @@
 @echo off
-set ip=10.184.30.32
+set /p ip= "ip: "
 set pwd=ADMIN
-cd C:\Users\Stephenhuang\sum_2.9.0_Win_x86_64
+cd /d C:\
+cd C:\Users\Stephenhuang\sum*
 sum.exe -i %ip% -u ADMIN -p %pwd% -c getbiosinfo --showall
 sum.exe -i %ip% -u ADMIN -p %pwd% -c getbmcinfo
 sum.exe -i %ip% -u ADMIN -p %pwd% -c getcpldinfo
 pause
+
+@REM checkassetinfo
+@REM getnvmeinfo
+@REM getpsuinfo
+@REM getaocnicinfo
