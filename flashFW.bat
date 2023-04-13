@@ -6,6 +6,17 @@ set /p bmcfile="Plz drag BMC FW file or type (n) "
 set /p biosfile="Plz drag BIOS FW file or type (n) "
 set /p Checkuni= "Need Unique Password? (y/n)"
 
+REM 檢查IP是否有效
+ping %ip% > ping_result.txt
+find "TTL=" ping_result.txt > nul
+if not %errorlevel% equ 0 (
+    echo %ip% is ivalid ip
+    del ping_result.txt
+    pause
+    goto :eof REM 跳到腳本末尾，終止腳本的執行
+)
+del ping_result.txt
+
 cd /d C:\
 cd C:\Users\Stephenhuang\sum*
 
@@ -36,9 +47,5 @@ if /i %biosfile%==n (
     echo "Updating BIOS firmware"
     sum.exe -i %ip% -u ADMIN -p %pwd% -c Updatebios --file %biosfile% --preserve_setting --reboot
 )
-
-@REM For test
-@REM echo %bmcfile%
-@REM echo %biosfile%
 
 pause
