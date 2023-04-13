@@ -1,32 +1,46 @@
 @echo off
 
-set var=b
+set test=B 
+echo %test% > test.txt
+find "A" test.txt > nul
+if %errorlevel% equ 0 (
+    echo A is found
+)
+find "B" text.txt > nul
+if %errorlevel% equ 0 (
+    echo B is found
+)
+find "C" text.txt > nul
+if %errorlevel% equ 0 (
+    echo C is found
+)
+del test.txt
 
-if %var%==a goto x
-if %var%==b goto y
-if %var%==c goto z
+@REM if %var%==a goto x
+@REM if %var%==b goto y
+@REM if %var%==c goto z
 
-:x
-echo a
-pause
-exit
-:y
-echo b
-pause
-exit
-:z
-echo c
-pause
-exit
+@REM :x
+@REM echo a
+@REM pause
+@REM exit
+@REM :y
+@REM echo b
+@REM pause
+@REM exit
+@REM :z
+@REM echo c
+@REM pause
+@REM exit
 
 
-@REM set x=2
+@REM @REM set x=2
+@REM @REM set y=3
+
+@REM SET x=2
 @REM set y=3
-
-SET x=2
-set y=3
-set /a z=x*y
-echo x+y
-echo %x%+%y%
-echo z
-echo %z%
+@REM set /a z=x*y
+@REM echo x+y
+@REM echo %x%+%y%
+@REM echo z
+@REM echo %z%
