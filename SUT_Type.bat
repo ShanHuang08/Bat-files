@@ -1,8 +1,7 @@
 @echo off
 setlocal enabledelayedexpansion
-cd /d D:\
-cd Script
-set SUT_Type=X13 H13 X12 H12 X11 X10
+
+set SUT_Type=X13 H13 X12 H12 H11 AST2500 AST2600 ASPD
 set file=Find_SUT.txt
 set SUT=
 
@@ -10,25 +9,31 @@ for %%i in (%SUT_Type%) do (
     find "%%i" Find_SUT.txt > nul
     if !errorlevel! equ 0 (
         set SUT=%%i
-        echo SUT is %%i
+        if not %%i equ ASPD (
+            echo SUT is %%i
+        )
+        if %%i equ ASPD (
+            echo SUT is X10 
+        )
     )
-)
-if %SUT%=="X12" (
-    goto x
-) else if %SUT%=="X13" (
-    goto y
+)  
+
+if not %SUT% equ ASPD (
+    goto :AboveX10
+) else (
+    goto :X10
 )
 endlocal
 
 
 
-:x
-echo "gotoX12 flash commands"
+:AboveX10
+echo "Put flash commands for the NEW version"
 pause
 exit
 
-:y
-echo "gotoX13 flash commaneds"
+:X10
+echo "Put X10 flash commands"
 pause
 exit
 
