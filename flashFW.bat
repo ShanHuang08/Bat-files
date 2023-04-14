@@ -1,14 +1,12 @@
-@echo off
+
 set /p ip= "ip: "
 
 echo "If you don't want to update specific FW, please type n"
 set /p bmcfile="Plz drag BMC FW file or type (n) "
 set /p biosfile="Plz drag BIOS FW file or type (n) "
-set /p Checkuni= "Login via Unique Password? (y/n)"
+set /p Checkuni= "Input Unique Password (y/n)"
 
-if /i %Checkuni%==y (
-    set /p pwd= "Unique Password: "
-) else (
+if /i %Checkuni%==n (
     set pwd=ADMIN
 )
 
@@ -25,26 +23,62 @@ if not %errorlevel% equ 0 (
     del ping_result.txt
 )
 
-
-REM 用ip查看SUT機種 也可以檢查是否要用Unique Password
-set SubMask=255.255.255.255
+REM 檢查是否要用Unique Password
 cd /d C:\
 cd C:\Users\Stephenhuang\SMC*
+
+SMCIPMITOOL.exe %ip% ADMIN %pwd% user list 2 > Login_Message.txt 
+find "Can't login to" Login_Message.txt > nul
+if not %errorlevel% equ 0 (
+    del Login_Message.txt 
+) else (
+    if /i %Checkuni%==n (
+        set /p pwd="Input Unique Password: "
+    )
+    del Login_Message.txt
+)
+
+REM 檢查SUT是哪一代 接goto flash commands
+setlocal enabledelayedexpansion
+set SubMask=255.255.255.255
 SMCIPMITOOL.exe %ip% ADMIN %pwd% find %ip% %ip% %SubMask% > Find_SUT.txt
 
-set SUT=X13 H13 X12 H12 X11 X10
+set SUT_Type=X13 H13 X12 H12 X11 X10
+set SUT=
 
-for %%i in (%SUT%) do (
+for %%i in (%SUT_Type%) do (
     find "%%i" Find_SUT.txt > nul
-    if %errorlevel% equ 0 (
-        echo %%i is found
+    if !errorlevel! equ 0 (
+        set SUT=%%i
+        echo SUT is %%i
     )
 )
+echo SUT=%SUT%
+if not %SUT% equ "ASPD" (
+    goto AboveX10
+) else (
+    goto X10
+)
 del Find_SUT.txt
+endlocal
+
+
+
+REM X10 BIOS不支援 --preserve_setting, BMC不支援--backup
+
+:AboveX10
+echo "Put New flash commands"
+pause
+exit
+
+:X10
+echo "Put X10 flash commands"
+pause
+exit
+
+
 
 cd C:\Users\Stephenhuang\sum*
-
-
 
 if /i %bmcfile%==n (
     echo "Skip BMC update"
