@@ -1,5 +1,8 @@
 @echo off
-set /p ip="ip: "
+set FolderPath=C:\Users\Stephenhuang\Downloads
+set SMC_Parent=C:\Users\Stephenhuang
+set sum_Parent=C:\Users\Stephenhuang
+set /p ip="BMC ip: "
 set /p Checkuni="Need Unique Password? (y/n) "
 if /i %Checkuni%==y (
     set /p pwd="Unique Password: "
@@ -7,19 +10,28 @@ if /i %Checkuni%==y (
     set pwd=ADMIN
 )
 
-@REM echo %ip%
-@REM echo %pwd%
+set filename=%ip%_CheckVersion.txt
 cd /d C:\
-cd C:\Users\Stephenhuang\sum*
-sum.exe -i %ip% -u ADMIN -p %pwd% -c getbiosinfo --showall
-sum.exe -i %ip% -u ADMIN -p %pwd% -c getbmcinfo
-sum.exe -i %ip% -u ADMIN -p %pwd% -c getcpldinfo
+cd %sum_Parent%\sum*
+echo BIOS info > %FolderPath%\%filename%
+echo -------------------------------------------------------------------------------- >> %FolderPath%\%filename%
+sum.exe -i %ip% -u ADMIN -p %pwd% -c getbiosinfo --showall >> %FolderPath%\%filename%
+echo BMC info > %FolderPath%\%filename%
+echo -------------------------------------------------------------------------------- >> %FolderPath%\%filename%
+sum.exe -i %ip% -u ADMIN -p %pwd% -c getbmcinfo >> %FolderPath%\%filename%
+echo CPLD info > %FolderPath%\%filename%
+echo -------------------------------------------------------------------------------- >> %FolderPath%\%filename%
+sum.exe -i %ip% -u ADMIN -p %pwd% -c getcpldinfo >> %FolderPath%\%filename%
+echo DMI info > %FolderPath%\%filename%
+echo -------------------------------------------------------------------------------- >> %FolderPath%\%filename%
+sum.exe -i %ip% -u ADMIN -p %pwd% -c getdmiinfo >> %FolderPath%\%filename%
 
-cd C:\Users\Stephenhuang
-cd SMCIPMITool*
-echo Redfish version: 
-SMCIPMITool.exe %ip% ADMIN %pwd% redfish version
-pause
+cd %SMC_Parent%\SMCIPMITool*
+echo Redfish version: >> %FolderPath%\%filename%
+SMCIPMITool.exe %ip% ADMIN %pwd% redfish version >> %FolderPath%\%filename%
+
+start %FolderPath%
+start %FolderPath%\%filename%
 
 @REM checkassetinfo
 @REM getnvmeinfo

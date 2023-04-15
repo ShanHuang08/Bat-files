@@ -89,7 +89,7 @@ endlocal
 
 :AboveX10
 @REM echo "Put New flash commands"
-cd C:\Users\Stephenhuang\sum*
+cd %sum_Parent%\sum*
 
 if /i %bmcfile%==n (
     echo "Skip BMC update"
@@ -118,7 +118,7 @@ exit
 REM X10 BIOS不支援 --preserve_setting, BMC不支援--backup
 :X10
 echo "Put X10 flash commands"
-cd C:\Users\Stephenhuang\sum*
+cd %sum_Parent%\sum*
 
 if /i %bmcfile%==n (
     echo "Skip BMC update"
