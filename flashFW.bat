@@ -77,13 +77,13 @@ for %%i in (%SUT_Type%) do (
         )
     )
 )  
-
+del Find_SUT.txt
 if not %SUT% equ ASPD (
     goto :AboveX10
 ) else (
     goto :X10
 )
-del Find_SUT.txt
+
 endlocal
 
 
