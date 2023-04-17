@@ -10,6 +10,19 @@ if /i %Checkuni%==y (
     set pwd=ADMIN
 )
 
+REM 檢查IP是否有效
+ping %ip% > ping_result.txt
+find "TTL=" ping_result.txt > nul
+if %errorlevel% equ 0 (
+    echo %ip% is valid ip
+    del ping_result.txt
+) else (
+    echo %ip% is ivalid ip
+    del ping_result.txt
+    pause
+    goto :eof 
+)
+
 set filename=%ip%_CheckVersion.txt
 cd /d C:\
 cd %sum_Parent%\sum*
@@ -19,10 +32,10 @@ sum.exe -i %ip% -u ADMIN -p %pwd% -c getbiosinfo --showall >> %FolderPath%\%file
 echo BMC info > %FolderPath%\%filename%
 echo -------------------------------------------------------------------------------- >> %FolderPath%\%filename%
 sum.exe -i %ip% -u ADMIN -p %pwd% -c getbmcinfo >> %FolderPath%\%filename%
-echo CPLD info > %FolderPath%\%filename%
+echo CPLD info >> %FolderPath%\%filename%
 echo -------------------------------------------------------------------------------- >> %FolderPath%\%filename%
 sum.exe -i %ip% -u ADMIN -p %pwd% -c getcpldinfo >> %FolderPath%\%filename%
-echo DMI info > %FolderPath%\%filename%
+echo DMI info >> %FolderPath%\%filename%
 echo -------------------------------------------------------------------------------- >> %FolderPath%\%filename%
 sum.exe -i %ip% -u ADMIN -p %pwd% -c getdmiinfo >> %FolderPath%\%filename%
 
