@@ -1,3 +1,8 @@
+@echo off
+echo Please chech your SMCIPMITooland sum parent folder path are correct before executing this file.
+echo Incorrect folder path will result failed execution with error message.
+echo --------------------------------------------------------
+
 set SMC_Parent=C:\Users\Stephenhuang
 set sum_Parent=C:\Users\Stephenhuang
 set /p ip= "BMC ip: "
@@ -20,7 +25,7 @@ if %errorlevel% equ 0 (
     echo %ip% is valid ip
     del ping_result.txt
 ) else (
-    echo %ip% is ivalid ip
+    echo %ip% is invalid ip
     del ping_result.txt
     pause
     goto :eof REM 跳到腳本末尾，終止腳本的執行
@@ -28,25 +33,27 @@ if %errorlevel% equ 0 (
 
 rem 檢查資料夾
 cd /d C:\
+cd %SMC_Parent%
 if exist %SMC_Parent%\SMC* (
     rem do nothing
 ) else (
     echo SMCIPMITool folder doesn't exist
     echo SMC Parent Path=%SMC_Parent%
-    pause
+    @REM pause
     goto :eof
 )
+cd %sum_Parent%
 if exist %sum_Parent%\sum* (
     rem do nothing
 ) else (
     echo sum folder doesn't exist
     echo sum Parent Path=%sum_Parent%
     pause
-    goto :eof
+    @REM goto :eof
 )
 
 REM 檢查是否要用Unique Password
-cd %Path%\SMC*
+cd %SMC_Parent%\SMC*
 SMCIPMITOOL.exe %ip% ADMIN %pwd% user list 2 > Login_Message.txt 
 find "Can't login to" Login_Message.txt > nul
 if not %errorlevel% equ 0 (
@@ -59,11 +66,12 @@ if not %errorlevel% equ 0 (
 )
 
 REM 檢查SUT是哪一代 接goto flash commands
+cd %SMC_Parent%\SMC*
 setlocal enabledelayedexpansion
-
+set submask=255.255.255.255
 set SUT_Type=X13 H13 X12 H12 H11 AST2500 AST2600 ASPD
-set file=Find_SUT.txt
 set SUT=
+SMCIPMITOOL.exe %ip% ADMIN %pwd% find %ip% %ip% %submask% > Find_SUT.txt
 
 for %%i in (%SUT_Type%) do (
     find "%%i" Find_SUT.txt > nul
@@ -146,3 +154,4 @@ pause
 exit
 
 :eof
+pause

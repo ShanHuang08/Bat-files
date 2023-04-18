@@ -1,4 +1,8 @@
 @echo off
+echo Please chech your SMCIPMITooland sum parent folder path are correct before executing this file.
+echo Incorrect folder path will result failed execution with error message.
+echo --------------------------------------------------------
+
 set FolderPath=C:\Users\Stephenhuang\Downloads
 set SMC_Parent=C:\Users\Stephenhuang
 set sum_Parent=C:\Users\Stephenhuang
@@ -29,7 +33,7 @@ cd %sum_Parent%\sum*
 echo BIOS info > %FolderPath%\%filename%
 echo -------------------------------------------------------------------------------- >> %FolderPath%\%filename%
 sum.exe -i %ip% -u ADMIN -p %pwd% -c getbiosinfo --showall >> %FolderPath%\%filename%
-echo BMC info > %FolderPath%\%filename%
+echo BMC info >> %FolderPath%\%filename%
 echo -------------------------------------------------------------------------------- >> %FolderPath%\%filename%
 sum.exe -i %ip% -u ADMIN -p %pwd% -c getbmcinfo >> %FolderPath%\%filename%
 echo CPLD info >> %FolderPath%\%filename%
