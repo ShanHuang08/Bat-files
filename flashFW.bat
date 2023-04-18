@@ -32,24 +32,24 @@ if %errorlevel% equ 0 (
 )
 
 rem 檢查資料夾
-cd /d C:\
+%SMC_Parent% | findstr /C:"C:\" >nul && cd /d C:\ || cd /d D:\
 cd %SMC_Parent%
 if exist %SMC_Parent%\SMC* (
     rem do nothing
 ) else (
     echo SMCIPMITool folder doesn't exist
     echo SMC Parent Path=%SMC_Parent%
-    @REM pause
+    pause
     goto :eof
 )
-cd %sum_Parent%
+%sum_Parent% | findstr /C:"C:\" >nul && cd /d C:\ || cd /d D:\
 if exist %sum_Parent%\sum* (
     rem do nothing
 ) else (
     echo sum folder doesn't exist
     echo sum Parent Path=%sum_Parent%
     pause
-    @REM goto :eof
+    goto :eof
 )
 
 REM 檢查是否要用Unique Password
@@ -154,4 +154,4 @@ pause
 exit
 
 :eof
-pause
+rem pause
