@@ -53,6 +53,7 @@ if exist %sum_Parent%\sum* (
 )
 
 REM 檢查是否要用Unique Password
+%SMC_Parent% | findstr /C:"C:\" >nul && cd /d C:\ || cd /d D:\
 cd %SMC_Parent%\SMC*
 SMCIPMITOOL.exe %ip% ADMIN %pwd% user list 2 > Login_Message.txt 
 find "Can't login to" Login_Message.txt > nul
@@ -66,6 +67,7 @@ if not %errorlevel% equ 0 (
 )
 
 REM 檢查SUT是哪一代 接goto flash commands
+%SMC_Parent% | findstr /C:"C:\" >nul && cd /d C:\ || cd /d D:\
 cd %SMC_Parent%\SMC*
 setlocal enabledelayedexpansion
 set submask=255.255.255.255
@@ -97,6 +99,7 @@ endlocal
 
 :AboveX10
 @REM echo "Put New flash commands"
+%sum_Parent% | findstr /C:"C:\" >nul && cd /d C:\ || cd /d D:\
 cd %sum_Parent%\sum*
 
 if /i %bmcfile%==n (
