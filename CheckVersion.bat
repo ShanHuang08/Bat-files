@@ -27,8 +27,31 @@ if %errorlevel% equ 0 (
     goto :eof 
 )
 
+rem 檢查資料夾
+%SMC_Parent% | findstr /C:"C:\" >nul && cd /d C:\ || cd /d D:\
+cd %SMC_Parent%
+if exist %SMC_Parent%\SMC* (
+    rem do nothing
+) else (
+    echo SMCIPMITool folder doesn't exist
+    echo SMC Parent Path=%SMC_Parent%
+    pause
+    goto :eof
+)
+%sum_Parent% | findstr /C:"C:\" >nul && cd /d C:\ || cd /d D:\
+cd %sum_Parent%
+if exist %sum_Parent%\sum* (
+    rem do nothing
+) else (
+    echo sum folder doesn't exist
+    echo sum Parent Path=%sum_Parent%
+    pause
+    goto :eof
+)
+
 set filename=%ip%_CheckVersion.txt
-cd /d C:\
+%sum_Parent% | findstr /C:"C:\" >nul && cd /d C:\ || cd /d D:\
+
 cd %sum_Parent%\sum*
 echo BIOS info > %FolderPath%\%filename%
 echo -------------------------------------------------------------------------------- >> %FolderPath%\%filename%
@@ -43,10 +66,12 @@ echo DMI info >> %FolderPath%\%filename%
 echo -------------------------------------------------------------------------------- >> %FolderPath%\%filename%
 sum.exe -i %ip% -u ADMIN -p %pwd% -c getdmiinfo >> %FolderPath%\%filename%
 
+%SMC_Parent% | findstr /C:"C:\" >nul && cd /d C:\ || cd /d D:\
 cd %SMC_Parent%\SMCIPMITool*
 echo Redfish version: >> %FolderPath%\%filename%
 SMCIPMITool.exe %ip% ADMIN %pwd% redfish version >> %FolderPath%\%filename%
 
+%FolderPath% | findstr /C:"C:\" >nul && cd /d C:\ || cd /d D:\
 start %FolderPath%
 start %FolderPath%\%filename%
 
