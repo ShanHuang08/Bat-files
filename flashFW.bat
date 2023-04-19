@@ -9,9 +9,12 @@ set /p ip= "BMC ip: "
 
 echo "If you don't want to update specific FW, please type n"
 set /p bmcfile="Plz drag BMC FW file or type (n) "
-set /p biosfile="Plz drag BIOS FW file or type (n) "
+if /i "%bmcfile%"=="n" (
+    set /p biosfile="Plz drag BIOS FW file or type (n) "
+) else (
+    set biosfile=n
+)
 set /p Checkuni= "Login via Unique Password (y/n) "
-
 if /i %Checkuni%==y (
     set /p pwd="Input Unique Password: "
 ) else (
@@ -28,7 +31,7 @@ if %errorlevel% equ 0 (
     echo %ip% is invalid ip
     del ping_result.txt
     pause
-    goto :eof REM 跳到腳本末尾，終止腳本的執行
+    goto :eof 
 )
 
 rem 檢查資料夾
@@ -53,7 +56,6 @@ if %errorlevel% equ 0 (
 ) else (
     cd /d D:\
 )
-%sum_Parent% | findstr /C:"C:\" >nul && cd /d C:\ || cd /d D:\
 if exist %sum_Parent%\sum* (
     rem do nothing
 ) else (
@@ -76,8 +78,11 @@ find "Can't login to" Login_Message.txt > nul
 if not %errorlevel% equ 0 (
     del Login_Message.txt 
 ) else (
+    echo Use %pwd% login failed
     if /i %Checkuni%==n (
         set /p pwd="Input Unique Password: "
+    ) else (
+        set pwd=ADMIN
     )
     del Login_Message.txt
 )
@@ -113,7 +118,6 @@ if not %SUT% equ ASPD (
     goto :AboveX10
 ) else (
     goto :X10
-)
 
 endlocal
 

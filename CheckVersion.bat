@@ -61,6 +61,29 @@ if exist %sum_Parent%\sum* (
     goto :eof
 )
 
+REM 檢查是否要用Unique Password
+echo %SMC_Parent% | findstr /C:"C:" > nul
+if %errorlevel% equ 0 (
+    cd /d C:\
+) else (
+    cd /d D:\
+)
+cd %SMC_Parent%\SMC*
+SMCIPMITOOL.exe %ip% ADMIN %pwd% user list 2 > Login_Message.txt 
+find "Can't login to" Login_Message.txt > nul
+if not %errorlevel% equ 0 (
+    del Login_Message.txt 
+) else (
+    echo Use %pwd% login failed
+    if /i %Checkuni%==n (
+        set /p pwd="Input Unique Password: "
+    ) else (
+        set pwd=ADMIN
+    )
+    del Login_Message.txt
+)
+
+
 set filename=%ip%_CheckVersion.txt
 
 echo %sum_Parent% | findstr /C:"C:" > nul
