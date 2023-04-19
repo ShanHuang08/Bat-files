@@ -1,7 +1,7 @@
 @echo off
-echo Please chech your SMCIPMITooland sum parent folder path are correct before executing this file.
+echo Please chech your SMCIPMITool and sum parent folder path are correct before executing this file.
 echo Incorrect folder path will result failed execution with error message.
-echo --------------------------------------------------------
+echo --------------------------------------------------------------------------
 
 set SMC_Parent=C:\Users\Stephenhuang
 set sum_Parent=C:\Users\Stephenhuang
@@ -32,7 +32,12 @@ if %errorlevel% equ 0 (
 )
 
 rem 檢查資料夾
-%SMC_Parent% | findstr /C:"C:\" >nul && cd /d C:\ || cd /d D:\
+echo %SMC_Parent% | findstr /C:"C:" > nul
+if %errorlevel% equ 0 (
+    cd /d C:\
+) else (
+    cd /d D:\
+)
 cd %SMC_Parent%
 if exist %SMC_Parent%\SMC* (
     rem do nothing
@@ -41,6 +46,12 @@ if exist %SMC_Parent%\SMC* (
     echo SMC Parent Path=%SMC_Parent%
     pause
     goto :eof
+)
+echo %sum_Parent% | findstr /C:"C:" > nul
+if %errorlevel% equ 0 (
+    cd /d C:\
+) else (
+    cd /d D:\
 )
 %sum_Parent% | findstr /C:"C:\" >nul && cd /d C:\ || cd /d D:\
 if exist %sum_Parent%\sum* (
@@ -53,7 +64,12 @@ if exist %sum_Parent%\sum* (
 )
 
 REM 檢查是否要用Unique Password
-%SMC_Parent% | findstr /C:"C:\" >nul && cd /d C:\ || cd /d D:\
+echo %SMC_Parent% | findstr /C:"C:" > nul
+if %errorlevel% equ 0 (
+    cd /d C:\
+) else (
+    cd /d D:\
+)
 cd %SMC_Parent%\SMC*
 SMCIPMITOOL.exe %ip% ADMIN %pwd% user list 2 > Login_Message.txt 
 find "Can't login to" Login_Message.txt > nul
@@ -67,7 +83,12 @@ if not %errorlevel% equ 0 (
 )
 
 REM 檢查SUT是哪一代 接goto flash commands
-%SMC_Parent% | findstr /C:"C:\" >nul && cd /d C:\ || cd /d D:\
+echo %SMC_Parent% | findstr /C:"C:" > nul
+if %errorlevel% equ 0 (
+    cd /d C:\
+) else (
+    cd /d D:\
+)
 cd %SMC_Parent%\SMC*
 setlocal enabledelayedexpansion
 set submask=255.255.255.255
@@ -99,7 +120,12 @@ endlocal
 
 :AboveX10
 @REM echo "Put New flash commands"
-%sum_Parent% | findstr /C:"C:\" >nul && cd /d C:\ || cd /d D:\
+echo %sum_Parent% | findstr /C:"C:" > nul
+if %errorlevel% equ 0 (
+    cd /d C:\
+) else (
+    cd /d D:\
+)
 cd %sum_Parent%\sum*
 
 if /i %bmcfile%==n (
@@ -129,6 +155,12 @@ exit
 REM X10 BIOS不支援 --preserve_setting, BMC不支援--backup
 :X10
 echo "Put X10 flash commands"
+echo %sum_Parent% | findstr /C:"C:" > nul
+if %errorlevel% equ 0 (
+    cd /d C:\
+) else (
+    cd /d D:\
+)
 cd %sum_Parent%\sum*
 
 if /i %bmcfile%==n (

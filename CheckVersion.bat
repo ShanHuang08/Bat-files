@@ -1,7 +1,7 @@
 @echo off
-echo Please chech your SMCIPMITooland sum parent folder path are correct before executing this file.
+echo Please chech your SMCIPMITool and sum parent folder path are correct before executing this file.
 echo Incorrect folder path will result failed execution with error message.
-echo --------------------------------------------------------
+echo --------------------------------------------------------------------------
 
 set FolderPath=C:\Users\Stephenhuang\Downloads
 set SMC_Parent=C:\Users\Stephenhuang
@@ -28,7 +28,13 @@ if %errorlevel% equ 0 (
 )
 
 rem 檢查資料夾
-%SMC_Parent% | findstr /C:"C:\" >nul && cd /d C:\ || cd /d D:\
+
+echo %SMC_Parent% | findstr /C:"C:" > nul
+if %errorlevel% equ 0 (
+    cd /d C:\
+) else (
+    cd /d D:\
+)
 cd %SMC_Parent%
 if exist %SMC_Parent%\SMC* (
     rem do nothing
@@ -38,7 +44,13 @@ if exist %SMC_Parent%\SMC* (
     pause
     goto :eof
 )
-%sum_Parent% | findstr /C:"C:\" >nul && cd /d C:\ || cd /d D:\
+
+echo %sum_Parent% | findstr /C:"C:" > nul
+if %errorlevel% equ 0 (
+    cd /d C:\
+) else (
+    cd /d D:\
+)
 cd %sum_Parent%
 if exist %sum_Parent%\sum* (
     rem do nothing
@@ -50,8 +62,13 @@ if exist %sum_Parent%\sum* (
 )
 
 set filename=%ip%_CheckVersion.txt
-%sum_Parent% | findstr /C:"C:\" >nul && cd /d C:\ || cd /d D:\
 
+echo %sum_Parent% | findstr /C:"C:" > nul
+if %errorlevel% equ 0 (
+    cd /d C:\
+) else (
+    cd /d D:\
+)
 cd %sum_Parent%\sum*
 echo BIOS info > %FolderPath%\%filename%
 echo -------------------------------------------------------------------------------- >> %FolderPath%\%filename%
@@ -66,12 +83,17 @@ echo DMI info >> %FolderPath%\%filename%
 echo -------------------------------------------------------------------------------- >> %FolderPath%\%filename%
 sum.exe -i %ip% -u ADMIN -p %pwd% -c getdmiinfo >> %FolderPath%\%filename%
 
-%SMC_Parent% | findstr /C:"C:\" >nul && cd /d C:\ || cd /d D:\
+echo %SMC_Parent% | findstr /C:"C:" > nul
+if %errorlevel% equ 0 (
+    cd /d C:\
+) else (
+    cd /d D:\
+)
 cd %SMC_Parent%\SMCIPMITool*
 echo Redfish version: >> %FolderPath%\%filename%
 SMCIPMITool.exe %ip% ADMIN %pwd% redfish version >> %FolderPath%\%filename%
 
-%FolderPath% | findstr /C:"C:\" >nul && cd /d C:\ || cd /d D:\
+
 start %FolderPath%
 start %FolderPath%\%filename%
 
