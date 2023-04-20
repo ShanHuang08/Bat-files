@@ -8,7 +8,7 @@ set sum_Parent=C:\Users\Stephenhuang
 set /p ip= "BMC ip: "
 
 echo "If you don't want to update specific FW, please type n"
-set /p bmcfile="Plz drag BMC FW file or type (n) "
+set /p bmcfile="Plz drag BMC FW file or type (n) to run BIOS FW update "
 if /i "%bmcfile%"=="n" (
     set /p biosfile="Plz drag BIOS FW file or type (n) "
 ) else (
@@ -158,7 +158,7 @@ exit
 
 REM X10 BIOS不支援 --preserve_setting, BMC不支援--backup
 :X10
-echo "Put X10 flash commands"
+echo "Execute X10 flash commands"
 echo %sum_Parent% | findstr /C:"C:" > nul
 if %errorlevel% equ 0 (
     cd /d C:\

@@ -21,7 +21,7 @@ if %errorlevel% equ 0 (
     echo %ip% is valid ip
     del ping_result.txt
 ) else (
-    echo %ip% is ivalid ip
+    echo %ip% is invalid ip
     del ping_result.txt
     pause
     goto :eof 
