@@ -97,7 +97,7 @@ if %errorlevel% equ 0 (
 cd %SMC_Parent%\SMC*
 setlocal enabledelayedexpansion
 set submask=255.255.255.255
-set SUT_Type=X13 H13 X12 H12 H11 AST2500 AST2600 ASPD
+set SUT_Type=X13 H13 X12 H12 H11 AST2500 ASPD
 set SUT=
 SMCIPMITOOL.exe %ip% ADMIN %pwd% find %ip% %ip% %submask% > Find_SUT.txt
 
@@ -112,18 +112,36 @@ for %%i in (%SUT_Type%) do (
             echo SUT is X10 
         )
     )
-)  
+)
+echo sut= %SUT%
 del Find_SUT.txt
-if not %SUT% equ ASPD (
-    goto :AboveX10
-) else (
-    goto :X10
 
+if %SUT% equ X13 (
+    goto :AboveX10
+)
+if %SUT% equ H13 (
+    goto :AboveX10
+)
+if %SUT% equ X12 (
+    goto :AboveX10
+)
+if %SUT% equ H12 (
+    goto :X10
+)
+if %SUT% equ AST2500 (
+    goto :X10
+)
+if %SUT% equ H11 (
+    goto :X10
+)
+if %SUT% equ ASPD (
+    goto :X10
+)
 endlocal
 
 
 :AboveX10
-@REM echo "Put New flash commands"
+echo "Execute full flash commands (X13/H13/X12)"
 echo %sum_Parent% | findstr /C:"C:" > nul
 if %errorlevel% equ 0 (
     cd /d C:\
@@ -158,7 +176,7 @@ exit
 
 REM X10 BIOS不支援 --preserve_setting, BMC不支援--backup
 :X10
-echo "Execute X10 flash commands"
+echo "Execute flash commands without --backup and --preserve_setting (H12/X11/H11/X10)"
 echo %sum_Parent% | findstr /C:"C:" > nul
 if %errorlevel% equ 0 (
     cd /d C:\
