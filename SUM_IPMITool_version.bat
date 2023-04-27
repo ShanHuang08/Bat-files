@@ -15,8 +15,8 @@ echo -------------------------------------------
 
 echo SUM version:
 cd C:\Users\Stephenhuang
-if exist *.zip (
-    echo ZIP exist
+if exist sum* (
+    echo Folder exist
     dir /B *.zip
     cd sum*
     sum.exe --version
