@@ -4,8 +4,8 @@ echo Incorrect folder path will result failed execution with error message.
 echo --------------------------------------------------------------------------
 
 set FolderPath=C:\Users\Stephenhuang\Downloads
-set SMC_Parent=C:\Users\Stephenhuang
-set sum_Parent=C:\Users\Stephenhuang
+set SMC_Parent=C:\Users\Stephenhuang\SMCIPMITool_2.27.2_build.230111_bundleJRE_Windows
+set sum_Parent=C:\Users\Stephenhuang\sum_2.10.0-p6_Win_x86_64
 set /p ip="BMC ip: "
 set /p Checkuni="Need Unique Password? (y/n) "
 if /i %Checkuni%==y (
@@ -36,7 +36,7 @@ if %errorlevel% equ 0 (
     cd /d D:\
 )
 cd %SMC_Parent%
-if exist %SMC_Parent%\SMC* (
+if exist %SMC_Parent% (
     rem do nothing
 ) else (
     echo SMCIPMITool folder doesn't exist
@@ -52,7 +52,7 @@ if %errorlevel% equ 0 (
     cd /d D:\
 )
 cd %sum_Parent%
-if exist %sum_Parent%\sum* (
+if exist %sum_Parent% (
     rem do nothing
 ) else (
     echo sum folder doesn't exist
@@ -68,7 +68,7 @@ if %errorlevel% equ 0 (
 ) else (
     cd /d D:\
 )
-cd %SMC_Parent%\SMC*
+cd %SMC_Parent%
 SMCIPMITOOL.exe %ip% ADMIN %pwd% user list 2 > Login_Message.txt 
 find "Can't login to" Login_Message.txt > nul
 if not %errorlevel% equ 0 (
@@ -93,7 +93,7 @@ if %errorlevel% equ 0 (
 ) else (
     cd /d D:\
 )
-cd %sum_Parent%\sum*
+cd %sum_Parent%
 echo BIOS info > %FolderPath%\%filename%
 echo -------------------------------------------------------------------------------- >> %FolderPath%\%filename%
 sum.exe -i %ip% -u ADMIN -p %pwd% -c getbiosinfo --showall >> %FolderPath%\%filename%
@@ -113,7 +113,7 @@ if %errorlevel% equ 0 (
 ) else (
     cd /d D:\
 )
-cd %SMC_Parent%\SMCIPMITool*
+cd %SMC_Parent%
 echo Redfish version: >> %FolderPath%\%filename%
 SMCIPMITool.exe %ip% ADMIN %pwd% redfish version >> %FolderPath%\%filename%
 

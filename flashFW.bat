@@ -207,8 +207,7 @@ if /i %biosfile%==n (
     sum.exe -i %ip% -u ADMIN -p %pwd% -c Updatebios --file %biosfile% --reboot
 )
 
-pause
-exit
+
 
 :eof
 rem pause
