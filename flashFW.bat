@@ -174,7 +174,7 @@ if /i %biosfile%==n (
 pause
 exit
 
-REM X10 BIOS不支援 --preserve_setting, BMC不支援--backup
+REM X10/X11 BIOS不支援 --preserve_setting, BMC不支援--backup and --overwrite_ssl
 :X10
 echo "Execute flash commands without --backup and --preserve_setting (H12/X11/H11/X10)"
 echo %sum_Parent% | findstr /C:"C:" > nul
@@ -193,7 +193,7 @@ if /i %bmcfile%==n (
     echo "Skip BMC update"
 ) else (
     echo "Updating BMC firmware"
-    sum.exe -i %ip% -u ADMIN -p %pwd% -c Updatebmc --file %bmcfile% --overwrite_cfg --overwrite_sdr --overwrite_ssl
+    sum.exe -i %ip% -u ADMIN -p %pwd% -c Updatebmc --file %bmcfile% --overwrite_cfg --overwrite_sdr 
 )
 
 if /i %biosfile%==n (
@@ -204,7 +204,7 @@ if /i %biosfile%==n (
     echo "Skip BIOS update"
 ) else (
     echo "Updating BIOS firmware"
-    sum.exe -i %ip% -u ADMIN -p %pwd% -c Updatebios --file %biosfile% --reboot
+    sum.exe -i %ip% -u ADMIN -p %pwd% -c Updatebios --file %biosfile% 
 )
 
 
