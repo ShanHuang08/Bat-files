@@ -159,6 +159,7 @@ if /i %bmcfile%==n (
 ) else (
     echo "Updating BMC firmware"
     sum.exe -i %ip% -u ADMIN -p %pwd% -c Updatebmc --file %bmcfile% --overwrite_cfg --overwrite_sdr --overwrite_ssl --backup
+    :eof
 )
 
 if /i %biosfile%==n (
@@ -170,9 +171,9 @@ if /i %biosfile%==n (
 ) else (
     echo "Updating BIOS firmware"
     sum.exe -i %ip% -u ADMIN -p %pwd% -c Updatebios --file %biosfile% --preserve_setting --reboot
+    :eof
 )
-pause
-exit
+
 
 REM X10/X11 BIOS不支援 --preserve_setting, BMC不支援--backup and --overwrite_ssl
 :X10
@@ -193,7 +194,8 @@ if /i %bmcfile%==n (
     echo "Skip BMC update"
 ) else (
     echo "Updating BMC firmware"
-    sum.exe -i %ip% -u ADMIN -p %pwd% -c Updatebmc --file %bmcfile% --overwrite_cfg --overwrite_sdr 
+    sum.exe -i %ip% -u ADMIN -p %pwd% -c Updatebmc --file %bmcfile% --overwrite_cfg --overwrite_sdr
+    :eof 
 )
 
 if /i %biosfile%==n (
@@ -205,9 +207,10 @@ if /i %biosfile%==n (
 ) else (
     echo "Updating BIOS firmware"
     sum.exe -i %ip% -u ADMIN -p %pwd% -c Updatebios --file %biosfile% 
+    :eof
 )
 
 
 
 :eof
-rem pause
+exit
