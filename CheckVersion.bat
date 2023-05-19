@@ -121,6 +121,8 @@ SMCIPMITool.exe %ip% ADMIN %pwd% redfish version >> %FolderPath%\%filename%
 start %FolderPath%
 start %FolderPath%\%filename%
 
+cd /d D:\Script
+
 @REM checkassetinfo
 @REM getnvmeinfo
 @REM getpsuinfo

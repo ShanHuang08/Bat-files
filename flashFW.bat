@@ -15,7 +15,7 @@ if /i "%bmcfile%"=="n" (
     set biosfile=n
 )
 set /p Checkuni= "Login via Unique Password (y/n) "
-if /i %Checkuni%==y (
+if /i "%Checkuni%"=="y" (
     set /p pwd="Input Unique Password: "
 ) else (
     set pwd=ADMIN
@@ -79,7 +79,7 @@ if not %errorlevel% equ 0 (
     del Login_Message.txt 
 ) else (
     echo Use %pwd% login failed
-    if /i %Checkuni%==n (
+    if /i "%Checkuni%"=="n" (
         set /p pwd="Input Unique Password: "
     ) else (
         set pwd=ADMIN
@@ -159,7 +159,7 @@ if /i %bmcfile%==n (
 ) else (
     echo "Updating BMC firmware"
     sum.exe -i %ip% -u ADMIN -p %pwd% -c Updatebmc --file %bmcfile% --overwrite_cfg --overwrite_sdr --overwrite_ssl --backup
-    :eof
+    exit
 )
 
 if /i %biosfile%==n (
@@ -171,7 +171,7 @@ if /i %biosfile%==n (
 ) else (
     echo "Updating BIOS firmware"
     sum.exe -i %ip% -u ADMIN -p %pwd% -c Updatebios --file %biosfile% --preserve_setting --reboot
-    :eof
+    exit
 )
 
 
@@ -186,31 +186,31 @@ if %errorlevel% equ 0 (
 )
 cd %sum_Parent%\sum*
 
-if /i %bmcfile%==n (
+if /i "%bmcfile%"=="n" (
     echo "Skip BMC update"
-) else if /i %bmcfile%==nn (
+) else if /i "%bmcfile%"=="nn" (
     echo "Skip BMC update"
-) else if /i %bmcfile%==m (
+) else if /i "%bmcfile%"=="m" (
     echo "Skip BMC update"
 ) else (
     echo "Updating BMC firmware"
     sum.exe -i %ip% -u ADMIN -p %pwd% -c Updatebmc --file %bmcfile% --overwrite_cfg --overwrite_sdr
-    :eof 
+    exit
 )
 
-if /i %biosfile%==n (
+if /i "%biosfile%"=="n" (
     echo "Skip BIOS update"
-) else if /i %biosfile%==nn (
+) else if /i "%biosfile%"=="nn" (
     echo "Skip BIOS update"
-) else if /i %biosfile%==m (
+) else if /i "%biosfile%"=="m" (
     echo "Skip BIOS update"
 ) else (
     echo "Updating BIOS firmware"
     sum.exe -i %ip% -u ADMIN -p %pwd% -c Updatebios --file %biosfile% 
-    :eof
+    exit
 )
 
 
 
 :eof
-exit
+cd /d D:\
