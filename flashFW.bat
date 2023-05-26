@@ -159,6 +159,7 @@ if /i %bmcfile%==n (
 ) else (
     echo "Updating BMC firmware"
     sum.exe -i %ip% -u ADMIN -p %pwd% -c Updatebmc --file %bmcfile% --overwrite_cfg --overwrite_sdr --overwrite_ssl --backup
+    pause
     exit
 )
 
@@ -171,6 +172,7 @@ if /i %biosfile%==n (
 ) else (
     echo "Updating BIOS firmware"
     sum.exe -i %ip% -u ADMIN -p %pwd% -c Updatebios --file %biosfile% --preserve_setting --reboot
+    pause
     exit
 )
 
@@ -195,6 +197,7 @@ if /i "%bmcfile%"=="n" (
 ) else (
     echo "Updating BMC firmware"
     sum.exe -i %ip% -u ADMIN -p %pwd% -c Updatebmc --file %bmcfile% --overwrite_cfg --overwrite_sdr
+    pause
     exit
 )
 
@@ -206,7 +209,8 @@ if /i "%biosfile%"=="n" (
     echo "Skip BIOS update"
 ) else (
     echo "Updating BIOS firmware"
-    sum.exe -i %ip% -u ADMIN -p %pwd% -c Updatebios --file %biosfile% 
+    sum.exe -i %ip% -u ADMIN -p %pwd% -c Updatebios --file %biosfile%
+    pause 
     exit
 )
 

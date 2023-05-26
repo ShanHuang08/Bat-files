@@ -114,6 +114,8 @@ if %errorlevel% equ 0 (
     cd /d D:\
 )
 cd %SMC_Parent%\SMCIPMITool*
+echo Firmware info >> %FolderPath%\%filename%
+SMCIPMITool.exe %ip% ADMIN %pwd% redfish firmwareInventory info >> %FolderPath%\%filename%
 echo Redfish version: >> %FolderPath%\%filename%
 SMCIPMITool.exe %ip% ADMIN %pwd% redfish version >> %FolderPath%\%filename%
 
