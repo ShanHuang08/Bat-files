@@ -103,6 +103,7 @@ SMCIPMITOOL.exe %ip% ADMIN %pwd% find %ip% %ip% %submask% > Find_SUT.txt
 
 for %%i in (%SUT_Type%) do (
     find "%%i" Find_SUT.txt > nul
+    echo errorlevel= !errorlevel!
     if !errorlevel! equ 0 (
         set SUT=%%i
         if not %%i equ ASPD (
@@ -111,6 +112,10 @@ for %%i in (%SUT_Type%) do (
         if %%i equ ASPD (
             echo SUT is X10 
         )
+    ) else (
+        echo No IPMI Device found!
+        pause
+        exit
     )
 )
 echo sut= %SUT%
@@ -170,8 +175,8 @@ if /i %biosfile%==n (
 ) else if /i %biosfile%==m (
     echo "Skip BIOS update"
 ) else (
-    echo "Updating BIOS firmware"
-    sum.exe -i %ip% -u ADMIN -p %pwd% -c Updatebios --file %biosfile% --preserve_setting --reboot
+    echo "Updating BIOS firmware (No --preserve_setting)"
+    sum.exe -i %ip% -u ADMIN -p %pwd% -c Updatebios --file %biosfile% --reboot
     pause
     exit
 )
