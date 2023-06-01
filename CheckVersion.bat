@@ -1,5 +1,5 @@
 @echo off
-echo Please chech your SMCIPMITool and sum parent folder path are correct before executing this file.
+echo Please check your SMCIPMITool and sum parent folder path are correct before executing this file.
 echo Incorrect folder path will result failed execution with error message.
 echo --------------------------------------------------------------------------
 
@@ -93,8 +93,13 @@ if %errorlevel% equ 0 (
 ) else (
     cd /d D:\
 )
+cd %SMC_Parent%\SMCIPMITool*
+echo Firmware info >> %FolderPath%\%filename%
+echo -------------------------------------------------------------------------------- >> %FolderPath%\%filename%
+SMCIPMITool.exe %ip% ADMIN %pwd% redfish firmwareInventory info >> %FolderPath%\%filename%
+
 cd %sum_Parent%\sum*
-echo BIOS info > %FolderPath%\%filename%
+echo BIOS info >> %FolderPath%\%filename%
 echo -------------------------------------------------------------------------------- >> %FolderPath%\%filename%
 sum.exe -i %ip% -u ADMIN -p %pwd% -c getbiosinfo --showall >> %FolderPath%\%filename%
 echo BMC info >> %FolderPath%\%filename%
@@ -114,8 +119,6 @@ if %errorlevel% equ 0 (
     cd /d D:\
 )
 cd %SMC_Parent%\SMCIPMITool*
-echo Firmware info >> %FolderPath%\%filename%
-SMCIPMITool.exe %ip% ADMIN %pwd% redfish firmwareInventory info >> %FolderPath%\%filename%
 echo Redfish version: >> %FolderPath%\%filename%
 SMCIPMITool.exe %ip% ADMIN %pwd% redfish version >> %FolderPath%\%filename%
 

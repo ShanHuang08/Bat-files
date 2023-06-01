@@ -97,13 +97,13 @@ if %errorlevel% equ 0 (
 cd %SMC_Parent%\SMC*
 setlocal enabledelayedexpansion
 set submask=255.255.255.255
-set SUT_Type=X13 H13 X12 H12 H11 AST2500 ASPD
+set SUT_Type=X13 X13RoT H13 H13RoT X12 H12 H11 AST2500 ASPD
 set SUT=
 SMCIPMITOOL.exe %ip% ADMIN %pwd% find %ip% %ip% %submask% > Find_SUT.txt
 
 for %%i in (%SUT_Type%) do (
     find "%%i" Find_SUT.txt > nul
-    echo errorlevel= !errorlevel!
+    @REM echo errorlevel= !errorlevel!
     if !errorlevel! equ 0 (
         set SUT=%%i
         if not %%i equ ASPD (
@@ -112,14 +112,10 @@ for %%i in (%SUT_Type%) do (
         if %%i equ ASPD (
             echo SUT is X10 
         )
-    ) else (
-        echo No IPMI Device found!
-        pause
-        exit
-    )
+    ) 
 )
 echo sut= %SUT%
-del Find_SUT.txt
+@REM del Find_SUT.txt
 
 if %SUT% equ X13 (
     goto :AboveX10
@@ -214,7 +210,7 @@ if /i "%biosfile%"=="n" (
     echo "Skip BIOS update"
 ) else (
     echo "Updating BIOS firmware"
-    sum.exe -i %ip% -u ADMIN -p %pwd% -c Updatebios --file %biosfile%
+    sum.exe -i %ip% -u ADMIN -p %pwd% -c Updatebios --file %biosfile% --reboot
     pause 
     exit
 )
