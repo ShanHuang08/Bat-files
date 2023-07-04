@@ -10,6 +10,7 @@ if /i %Checkuni%==y (
 )
 
 REM 檢查IP是否有效
+cd /d D:\Script
 ping %ip% > ping_result.txt
 find "TTL=" ping_result.txt > nul
 if %errorlevel% equ 0 (
