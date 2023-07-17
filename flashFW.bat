@@ -97,7 +97,7 @@ if %errorlevel% equ 0 (
 cd %SMC_Parent%\SMC*
 setlocal enabledelayedexpansion
 set submask=255.255.255.255
-set SUT_Type=X13 X13RoT H13 H13RoT X12 H12 H11 AST2500 ASPD
+set SUT_Type=X13 X13RoT H13 H13RoT X12 H12 H11 AST2500 ASPD AST2400
 set SUT=
 SMCIPMITOOL.exe %ip% ADMIN %pwd% find %ip% %ip% %submask% > Find_SUT.txt
 
@@ -106,11 +106,14 @@ for %%i in (%SUT_Type%) do (
     @REM echo errorlevel= !errorlevel!
     if !errorlevel! equ 0 (
         set SUT=%%i
-        if not %%i equ ASPD (
+        if %%i neq ASPD if %%i neq AST2400 (
             echo SUT is %%i
         )
         if %%i equ ASPD (
             echo SUT is X10 
+        )
+        if %%i equ AST2400 (
+            echo SUT is X10
         )
     ) 
 )
@@ -136,6 +139,9 @@ if %SUT% equ H11 (
     goto :X10
 )
 if %SUT% equ ASPD (
+    goto :X10
+)
+if %SUT% equ AST2400 (
     goto :X10
 )
 endlocal
