@@ -1,5 +1,5 @@
 @echo off
-@REM 2023/7/25 第一版 
+@REM 2023/7/26 第2版 
 
 set SMC_Parent=C:\Users\Stephenhuang
 set /p ip= "BMC ip: "
@@ -28,55 +28,35 @@ if %errorlevel% equ 0 (
     cd /d D:\
 )
 
-REM 檢查是否要用Unique Password
-echo %SMC_Parent% | findstr /C:"C:" > nul
-if %errorlevel% equ 0 (
-    cd /d C:\
-) else (
-    cd /d D:\
-)
+set cmd1="ipmi raw 30 40"
+set cmd2="ipmi raw 30 41"
+set cmd3="ipmi raw 30 42"
+set cmd4="ipmi raw 30 48 0"
+set cmd5="ipmi raw 30 48 1"
+set cmd6="ipmi fd 1"
+set cmd7="ipmi fd 2"
+set cmd8="ipmi fd 3"
+set Commands=%cmd1% %cmd2% %cmd3% %cmd4% %cmd5% %cmd6% %cmd7% %cmd8%
 
-cd %SMC_Parent%\SMC*
-SMCIPMITOOL.exe %ip% ADMIN %pwd% user list 2 > Login_Message.txt 
-find "Can't login to" Login_Message.txt > nul
-if not %errorlevel% equ 0 (
-    del Login_Message.txt 
-) else (
-    echo Use %pwd% login failed
-    if /i %Checkuni%==n (
-        set /p pwd="Input Unique Password: "
-    ) else (
-        set pwd=ADMIN
-    )
-    del Login_Message.txt
-)
-
+setlocal enabledelayedexpansion
 cd %SMC_Parent%
 if exist %SMC_Parent%\SMC* (
     cd %SMC_Parent%\SMC*
-    echo Start executing ipmi raw 30 40
-    SMCIPMITOOL.exe %ip% ADMIN %Uniqpwd% ipmi raw 30 40
-    timeout 180
-    echo Start executing ipmi raw 30 41
-    SMCIPMITOOL.exe %ip% ADMIN %Uniqpwd% ipmi raw 30 41
-    timeout 180
-    echo Start executing ipmi raw 30 42
-    SMCIPMITOOL.exe %ip% ADMIN %Uniqpwd% ipmi raw 30 42
-    timeout 180
-    echo Start executing ipmi raw 30 48 0
-    SMCIPMITOOL.exe %ip% ADMIN %Uniqpwd% ipmi raw 30 48 0
-    timeout 180
-    echo Start executing ipmi raw 30 48 1
-    SMCIPMITOOL.exe %ip% ADMIN %Uniqpwd% ipmi raw 30 48 1
-    timeout 180
-    echo Start executing FD 1
-    SMCIPMITOOL.exe %ip% ADMIN %pwd% ipmi fd 1
-    timeout 180
-    echo Start executing FD 2
-    SMCIPMITOOL.exe %ip% ADMIN %Uniqpwd% ipmi fd 2
-    timeout 180
-    echo Start executing FD 3
-    SMCIPMITOOL.exe %ip% ADMIN %Uniqpwd% ipmi fd 3
+    for %%i in (%Commands%) do (
+        set "command=%%i"
+        if %%i neq "ipmi raw 30 40" if %%i neq "ipmi fd 1" (
+            echo Start executing !command:~1,-1!
+            SMCIPMITOOL.exe %ip% ADMIN %pwd% !command:~1,-1!
+        ) else (
+            echo Start executing !command:~1,-1!
+            SMCIPMITOOL.exe %ip% ADMIN %Uniqpwd% !command:~1,-1!
+        )
+        if %%i equ "ipmi raw 30 40" (
+            echo Start executing !command:~1,-1!
+            SMCIPMITOOL.exe %ip% ADMIN %pwd% !command:~1,-1!
+        )
+        timeout 150       
+    )
     cd /d D:\Script
 ) else (
     echo SMCIPMITool folder doesn't exist
