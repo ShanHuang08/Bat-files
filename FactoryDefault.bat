@@ -3,8 +3,10 @@
 
 set SMC_Parent=C:\Users\Stephenhuang
 set /p ip= "BMC ip: "
-set /p Uniqpwd="Input Unique Password: "
+@REM set /p Uniqpwd= "Input Unique Password: "
 set pwd=ADMIN
+@REM for X10
+set Uniqpwd=ADMIN
 
 REM 檢查IP是否有效
 cd /d D:\Script
@@ -45,17 +47,17 @@ if exist %SMC_Parent%\SMC* (
     for %%i in (%Commands%) do (
         set "command=%%i"
         if %%i neq "ipmi raw 30 40" if %%i neq "ipmi fd 1" (
-            echo Start executing !command:~1,-1!
-            SMCIPMITOOL.exe %ip% ADMIN %pwd% !command:~1,-1!
-        ) else (
-            echo Start executing !command:~1,-1!
+            echo Start executing1 !command:~1,-1!
             SMCIPMITOOL.exe %ip% ADMIN %Uniqpwd% !command:~1,-1!
+        ) else (
+            echo Start executing2 !command:~1,-1!
+            SMCIPMITOOL.exe %ip% ADMIN %pwd% !command:~1,-1!
         )
         if %%i equ "ipmi raw 30 40" (
-            echo Start executing !command:~1,-1!
+            echo Start executing3 !command:~1,-1!
             SMCIPMITOOL.exe %ip% ADMIN %pwd% !command:~1,-1!
         )
-        timeout 150       
+        timeout 240       
     )
     cd /d D:\Script
 ) else (
