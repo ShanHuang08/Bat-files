@@ -34,8 +34,8 @@ set cmd1="ipmi raw 30 40"
 set cmd2="ipmi raw 30 41"
 set cmd3="ipmi raw 30 42"
 set cmd4="ipmi raw 30 48 0"
-set cmd5="ipmi raw 30 48 1"
-set cmd6="ipmi fd 1"
+set cmd5="ipmi fd 1"
+set cmd6="ipmi raw 30 48 1"
 set cmd7="ipmi fd 2"
 set cmd8="ipmi fd 3"
 set Commands=%cmd1% %cmd2% %cmd3% %cmd4% %cmd5% %cmd6% %cmd7% %cmd8%
@@ -46,7 +46,7 @@ if exist %SMC_Parent%\SMC* (
     cd %SMC_Parent%\SMC*
     for %%i in (%Commands%) do (
         set "command=%%i"
-        if %%i neq "ipmi raw 30 40" if %%i neq "ipmi fd 1" (
+        if %%i neq "ipmi raw 30 40" if %%i neq "ipmi fd 2" (
             echo Start executing1 !command:~1,-1!
             SMCIPMITOOL.exe %ip% ADMIN %Uniqpwd% !command:~1,-1!
         ) else (
