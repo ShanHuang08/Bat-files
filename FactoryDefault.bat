@@ -1,16 +1,16 @@
 @echo off
-@REM 2023/7/26 第2版 
+@REM 2023/7/30 第4版 
 
 set SMC_Parent=C:\Users\Stephenhuang
 set /p ip= "BMC ip: "
-@REM set /p Uniqpwd= "Input Unique Password: "
+set /p Uniqpwd= "Input Unique Password: "
 set pwd=ADMIN
 @REM for X10
-set Uniqpwd=ADMIN
+@REM set Uniqpwd=ADMIN
 
 REM 檢查IP是否有效
 cd /d D:\Script
-ping %ip% > ping_result.txt
+ping -n 2 %ip% > ping_result.txt
 find "TTL=" ping_result.txt > nul
 if %errorlevel% equ 0 (
     echo %ip% is valid ip
@@ -49,17 +49,23 @@ if exist %SMC_Parent%\SMC* (
         if %%i neq "ipmi raw 30 40" if %%i neq "ipmi fd 2" (
             echo Start executing1 !command:~1,-1!
             SMCIPMITOOL.exe %ip% ADMIN %Uniqpwd% !command:~1,-1!
+            call :PingSUT
         ) else (
             echo Start executing2 !command:~1,-1!
             SMCIPMITOOL.exe %ip% ADMIN %pwd% !command:~1,-1!
+            call :PingSUT
         )
         if %%i equ "ipmi raw 30 40" (
             echo Start executing3 !command:~1,-1!
             SMCIPMITOOL.exe %ip% ADMIN %pwd% !command:~1,-1!
+            call :PingSUT
         )
-        timeout 240       
+        if %%i neq %cmd8% (
+            timeout 200
+        )    
     )
     cd /d D:\Script
+    goto :eof
 ) else (
     echo SMCIPMITool folder doesn't exist
     echo SMC Parent Path=%SMC_Parent%
@@ -68,5 +74,28 @@ if exist %SMC_Parent%\SMC* (
 )
 
 @REM 寫個方法查詢ping結果
+:PingSUT
+ping -n 1 %ip% > ping_result.txt
+find "TTL=" ping_result.txt > nul
+if %errorlevel% equ 0 (
+    echo PASS
+    del ping_result.txt
+) else (
+    del ping_result.txt
+    timeout 30
+    call :PingAgain
+)
+goto :eof
+
+:PingAgain
+ping -n 1 %ip% > ping_again.txt
+find "TTL=" ping_again.txt > nul
+if %errorlevel% equ 0 (
+    echo PASS
+    del ping_again.txt
+) else (
+    echo FAIL
+    del ping_again.txt
+)
 
 :eof 
