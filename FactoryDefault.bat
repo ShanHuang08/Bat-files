@@ -1,12 +1,19 @@
 @echo off
+setlocal enabledelayedexpansion
 @REM 2023/7/30 第4版 
 
 set SMC_Parent=C:\Users\Stephenhuang
 set /p ip= "BMC ip: "
 set /p Uniqpwd= "Input Unique Password: "
 set pwd=ADMIN
-@REM for X10
-@REM set Uniqpwd=ADMIN
+
+set "string=!ip:~0,3!"
+if "!string!"=="10." (
+    set sec=180
+)
+if "!string!"=="172" (
+    set sec=200
+)
 
 REM 檢查IP是否有效
 cd /d D:\Script
@@ -40,7 +47,7 @@ set cmd7="ipmi fd 2"
 set cmd8="ipmi fd 3"
 set Commands=%cmd1% %cmd2% %cmd3% %cmd4% %cmd5% %cmd6% %cmd7% %cmd8%
 
-setlocal enabledelayedexpansion
+
 cd %SMC_Parent%
 if exist %SMC_Parent%\SMC* (
     cd %SMC_Parent%\SMC*
@@ -61,7 +68,7 @@ if exist %SMC_Parent%\SMC* (
             call :PingSUT
         )
         if %%i neq %cmd8% (
-            timeout 200
+            timeout !sec!
         )    
     )
     cd /d D:\Script
@@ -97,5 +104,5 @@ if %errorlevel% equ 0 (
     echo FAIL
     del ping_again.txt
 )
-
+cd /d D:\Script
 :eof 
