@@ -61,7 +61,7 @@ if exist %SMC_Parent%\SMC* (
             call :PingSUT
         )
         if %%i neq %cmd8% (
-            timeout 200
+            timeout 180
         )    
     )
     cd /d D:\Script
