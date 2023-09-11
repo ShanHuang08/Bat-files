@@ -1,12 +1,19 @@
 @echo off
-@REM 2023/7/30 第4版 
+setlocal enabledelayedexpansion
+@REM 2023/8/4 第5版 
 
 set SMC_Parent=C:\Users\Stephenhuang
 set /p ip= "BMC ip: "
 set /p Uniqpwd= "Input Unique Password: "
 set pwd=ADMIN
-@REM for X10
-@REM set Uniqpwd=ADMIN
+
+set "string=!ip:~0,3!"
+if "!string!"=="10." (
+    set sec=150
+)
+if "!string!"=="172" (
+    set sec=160
+)
 
 REM 檢查IP是否有效
 cd /d D:\Script
@@ -40,29 +47,25 @@ set cmd7="ipmi fd 2"
 set cmd8="ipmi fd 3"
 set Commands=%cmd1% %cmd2% %cmd3% %cmd4% %cmd5% %cmd6% %cmd7% %cmd8%
 
-setlocal enabledelayedexpansion
+
 cd %SMC_Parent%
 if exist %SMC_Parent%\SMC* (
     cd %SMC_Parent%\SMC*
     for %%i in (%Commands%) do (
         set "command=%%i"
         if %%i neq "ipmi raw 30 40" if %%i neq "ipmi fd 2" (
-            echo Start executing1 !command:~1,-1!
+            echo Start executing !command:~1,-1!
             SMCIPMITOOL.exe %ip% ADMIN %Uniqpwd% !command:~1,-1!
-            call :PingSUT
         ) else (
-            echo Start executing2 !command:~1,-1!
+            echo Start executing !command:~1,-1!
             SMCIPMITOOL.exe %ip% ADMIN %pwd% !command:~1,-1!
-            call :PingSUT
         )
         if %%i equ "ipmi raw 30 40" (
-            echo Start executing3 !command:~1,-1!
+            echo Start executing !command:~1,-1!
             SMCIPMITOOL.exe %ip% ADMIN %pwd% !command:~1,-1!
-            call :PingSUT
         )
-        if %%i neq %cmd8% (
-            timeout 180
-        )    
+        timeout !sec!
+        call :PingSUT
     )
     cd /d D:\Script
     goto :eof
@@ -97,5 +100,5 @@ if %errorlevel% equ 0 (
     echo FAIL
     del ping_again.txt
 )
-
+cd /d D:\Script
 :eof 
