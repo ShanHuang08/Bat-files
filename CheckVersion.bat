@@ -97,6 +97,9 @@ cd %SMC_Parent%\SMCIPMITool*
 echo Firmware info >> %FolderPath%\%filename%
 echo -------------------------------------------------------------------------------- >> %FolderPath%\%filename%
 SMCIPMITool.exe %ip% ADMIN %pwd% redfish firmwareInventory info >> %FolderPath%\%filename%
+echo Get CPLD from raw: >> %FolderPath%\%filename%
+SMCIPMITool.exe %ip% ADMIN %pwd% ipmi raw 30 68 28 3 >> %FolderPath%\%filename%
+
 
 cd %sum_Parent%\sum*
 echo BIOS info >> %FolderPath%\%filename%
