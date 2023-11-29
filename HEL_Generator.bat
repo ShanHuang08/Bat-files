@@ -62,6 +62,9 @@ if exist %SMC_Parent%\SMC* (
     SMCIPMITOOL.exe %ip% ADMIN %pwd% ipmi raw 4 2 4 2 24 1 4 ff ff
     SMCIPMITOOL.exe %ip% ADMIN %pwd% ipmi raw 4 2 4 5 aa 8 0 ff ff
     SMCIPMITOOL.exe %ip% ADMIN %pwd% ipmi raw 4 2 4 7 1 6f 1 ff ff
+    @REM CATERR error
+    SMCIPMITOOL.exe %ip% ADMIN %pwd% ipmi raw 4 2 4 7 1 6f 0 ff ff
+    SMCIPMITOOL.exe %ip% ADMIN %pwd% ipmi raw 4 2 4 7 1 ef 0 ff ff
     cd /d D:\Script
 ) else (
     echo SMCIPMITool folder doesn't exist

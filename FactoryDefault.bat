@@ -65,7 +65,14 @@ if exist %SMC_Parent%\SMC* (
             SMCIPMITOOL.exe %ip% ADMIN %pwd% !command:~1,-1!
         )
         timeout !sec!
-        call :PingSUT
+        if %%i neq "ipmi raw 30 40" if %%i neq "ipmi fd 2" (
+            call :CheckMEL_Unique  
+        ) else (
+            call :CheckMEL_pwd 
+        )
+        if %%i equ "ipmi raw 30 40" (
+            call :CheckMEL_pwd 
+        )
     )
     cd /d D:\Script
     goto :eof
@@ -76,29 +83,48 @@ if exist %SMC_Parent%\SMC* (
     goto :eof
 )
 
-@REM 寫個方法查詢ping結果
-:PingSUT
-ping -n 1 %ip% > ping_result.txt
-find "TTL=" ping_result.txt > nul
+:CheckMEL_pwd    
+cd %SMC_Parent%\SMC*
+SMCIPMITOOL.exe %ip% ADMIN %pwd% mel list 10 > %SMC_Parent%\Mel_list.txt
+find "MEL-0056" %SMC_Parent%\Mel_list.txt > nul
 if %errorlevel% equ 0 (
+    echo MEL-0056 has found
     echo PASS
-    del ping_result.txt
+    del %SMC_Parent%\Mel_list.txt
 ) else (
-    del ping_result.txt
-    timeout 30
-    call :PingAgain
+    find "unauthorized" %SMC_Parent%\Mel_list.txt > nul
+    if %errorlevel% equ 0 (
+        SMCIPMITOOL.exe %ip% ADMIN %Uniqpwd% mel list 10 > %SMC_Parent%\Mel_list.txt
+        find "MEL-0056" %SMC_Parent%\Mel_list.txt > nul
+        if %errorlevel% equ 0 (
+            echo MEL-0056 has found
+            echo PASS
+        ) else (
+            echo MEL-0056 has not found
+            echo FAIL
+        )
+    ) 
 )
-goto :eof
 
-:PingAgain
-ping -n 1 %ip% > ping_again.txt
-find "TTL=" ping_again.txt > nul
+:CheckMEL_Unique    
+cd %SMC_Parent%\SMC*
+SMCIPMITOOL.exe %ip% ADMIN %Uniqpwd% mel list 10 > %SMC_Parent%\Mel_list.txt
+find "MEL-0056" %SMC_Parent%\Mel_list.txt > nul
 if %errorlevel% equ 0 (
+    echo MEL-0056 has found
     echo PASS
-    del ping_again.txt
+    del %SMC_Parent%\Mel_list.txt
 ) else (
-    echo FAIL
-    del ping_again.txt
+    find "unauthorized" %SMC_Parent%\Mel_list.txt > nul
+    if %errorlevel% equ 0 (
+        SMCIPMITOOL.exe %ip% ADMIN %pwd% mel list 10 > %SMC_Parent%\Mel_list.txt
+        find "MEL-0056" %SMC_Parent%\Mel_list.txt > nul
+        if %errorlevel% equ 0 (
+            echo MEL-0056 has found
+            echo PASS
+        ) else (
+            echo MEL-0056 has not found
+            echo FAIL
+        )
+    )
 )
-cd /d D:\Script
-:eof 

@@ -1,46 +1,35 @@
 @echo off
 
-set test=B 
-echo %test% > test.txt
-find "A" test.txt > nul
+set SMC_Parent=C:\Users\Stephenhuang
+set /p ip= "BMC ip: "
+set pwd=ADMIN
+cd /d C:\
+if exist %SMC_Parent%\SMC* (
+    cd %SMC_Parent%\SMC*
+    
+    
+:CheckMEL_pwd    
+cd %SMC_Parent%\SMC*
+SMCIPMITOOL.exe %ip% ADMIN %pwd% mel list 10 > %SMC_Parent%\Mel_list.txt
+find "MEL-0056" %SMC_Parent%\Mel_list.txt > nul
 if %errorlevel% equ 0 (
-    echo A is found
+    echo MEL-0056 has found
+    del %SMC_Parent%\Mel_list.txt
+    cd /d D:\Script
+) else (
+    echo MEL-0056 has not found
+    echo FAIL
 )
-find "B" text.txt > nul
+
+:CheckMEL_Unique    
+cd %SMC_Parent%\SMC*
+SMCIPMITOOL.exe %ip% ADMIN %Uniqpwd% mel list 10 > %SMC_Parent%\Mel_list.txt
+find "MEL-0056" %SMC_Parent%\Mel_list.txt > nul
 if %errorlevel% equ 0 (
-    echo B is found
+    echo MEL-0056 has found
+    del %SMC_Parent%\Mel_list.txt
+    cd /d D:\Script
+) else (
+    echo MEL-0056 has not found
+    echo FAIL
 )
-find "C" text.txt > nul
-if %errorlevel% equ 0 (
-    echo C is found
-)
-del test.txt
-
-@REM if %var%==a goto x
-@REM if %var%==b goto y
-@REM if %var%==c goto z
-
-@REM :x
-@REM echo a
-@REM pause
-@REM exit
-@REM :y
-@REM echo b
-@REM pause
-@REM exit
-@REM :z
-@REM echo c
-@REM pause
-@REM exit
-
-
-@REM @REM set x=2
-@REM @REM set y=3
-
-@REM SET x=2
-@REM set y=3
-@REM set /a z=x*y
-@REM echo x+y
-@REM echo %x%+%y%
-@REM echo z
-@REM echo %z%
