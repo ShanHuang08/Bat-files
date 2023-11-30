@@ -1,6 +1,6 @@
 @echo off
 setlocal enabledelayedexpansion
-@REM 2023/8/4 第5版 
+@REM 2023/11/30 第6版 
 
 set SMC_Parent=C:\Users\Stephenhuang
 set /p ip= "BMC ip: "
@@ -65,14 +65,7 @@ if exist %SMC_Parent%\SMC* (
             SMCIPMITOOL.exe %ip% ADMIN %pwd% !command:~1,-1!
         )
         timeout !sec!
-        if %%i neq "ipmi raw 30 40" if %%i neq "ipmi fd 2" (
-            call :CheckMEL_Unique  
-        ) else (
-            call :CheckMEL_pwd 
-        )
-        if %%i equ "ipmi raw 30 40" (
-            call :CheckMEL_pwd 
-        )
+        call :CheckMEL_pwd 
     )
     cd /d D:\Script
     goto :eof
@@ -99,32 +92,10 @@ if %errorlevel% equ 0 (
         if %errorlevel% equ 0 (
             echo MEL-0056 has found
             echo PASS
+            del %SMC_Parent%\Mel_list.txt
         ) else (
             echo MEL-0056 has not found
             echo FAIL
         )
     ) 
-)
-
-:CheckMEL_Unique    
-cd %SMC_Parent%\SMC*
-SMCIPMITOOL.exe %ip% ADMIN %Uniqpwd% mel list 10 > %SMC_Parent%\Mel_list.txt
-find "MEL-0056" %SMC_Parent%\Mel_list.txt > nul
-if %errorlevel% equ 0 (
-    echo MEL-0056 has found
-    echo PASS
-    del %SMC_Parent%\Mel_list.txt
-) else (
-    find "unauthorized" %SMC_Parent%\Mel_list.txt > nul
-    if %errorlevel% equ 0 (
-        SMCIPMITOOL.exe %ip% ADMIN %pwd% mel list 10 > %SMC_Parent%\Mel_list.txt
-        find "MEL-0056" %SMC_Parent%\Mel_list.txt > nul
-        if %errorlevel% equ 0 (
-            echo MEL-0056 has found
-            echo PASS
-        ) else (
-            echo MEL-0056 has not found
-            echo FAIL
-        )
-    )
 )
