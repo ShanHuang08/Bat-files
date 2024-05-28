@@ -106,8 +106,8 @@ echo "ipmi raw 30 68 E3 00 01 should responds 00 (Only for intel On-demand)" >> 
 SMCIPMITool.exe %ip% ADMIN %pwd% ipmi raw 30 68 E3 00 01 >> %FolderPath%\%filename%
 echo "ipmi raw 30 68 E3 00 02 should responds 00 (Only for intel On-demand)" >> %FolderPath%\%filename%
 SMCIPMITool.exe %ip% ADMIN %pwd% ipmi raw 30 68 E3 00 02 >> %FolderPath%\%filename%
-echo "https://wiki.supermicro.com/index.php/NS_SWPM:SW_PM/IPMI/0x30_0x68_0xE3"
-echo " "
+echo "https://wiki.supermicro.com/index.php/NS_SWPM:SW_PM/IPMI/0x30_0x68_0xE3" >> %FolderPath%\%filename%
+echo " " >> %FolderPath%\%filename%
 
 cd %sum_Parent%\sum*
 echo BIOS info >> %FolderPath%\%filename%
