@@ -1,12 +1,22 @@
 @echo off
 set SMC_Parent=C:\Users\Stephenhuang
 set /p ip= "BMC ip: "
+set account=ADMIN
+
+set /p CheckSUTType="OpenBMC SUT? (y/n) "
+if /i %CheckSUTType%==y (
+    set account=root
+)
 
 set /p Checkuni= "Login via Unique Password (y/n) "
 if /i %Checkuni%==y (
     set /p pwd="Input Unique Password: "
 ) else (
-    set pwd=ADMIN
+    if /i %CheckSUTType%==y (
+        set pwd=0penBmc
+    ) else (
+        set pwd=ADMIN
+    )
 )
 
 REM 檢查IP是否有效
@@ -39,7 +49,7 @@ if %errorlevel% equ 0 (
     cd /d D:\
 )
 cd %SMC_Parent%\SMC*
-SMCIPMITOOL.exe %ip% ADMIN %pwd% user list 2 > Login_Message.txt 
+SMCIPMITOOL.exe %ip% %account% %pwd% user list 2 > Login_Message.txt 
 find "Can't login to" Login_Message.txt > nul
 if not %errorlevel% equ 0 (
     del Login_Message.txt 
@@ -57,14 +67,14 @@ cd %SMC_Parent%
 if exist %SMC_Parent%\SMC* (
     echo Start generating HEL
     cd %SMC_Parent%\SMC*
-    SMCIPMITOOL.exe %ip% ADMIN %pwd% ipmi raw 0a 44 10 00 02 00 00 00 00 20 00 04 07 01 02 01 ff ff
-    SMCIPMITOOL.exe %ip% ADMIN %pwd% ipmi raw 4 2 4 1 1 1 0 ff ff
-    SMCIPMITOOL.exe %ip% ADMIN %pwd% ipmi raw 4 2 4 2 24 1 4 ff ff
-    SMCIPMITOOL.exe %ip% ADMIN %pwd% ipmi raw 4 2 4 5 aa 8 0 ff ff
-    SMCIPMITOOL.exe %ip% ADMIN %pwd% ipmi raw 4 2 4 7 1 6f 1 ff ff
+    SMCIPMITOOL.exe %ip% %account% %pwd% ipmi raw 0a 44 10 00 02 00 00 00 00 20 00 04 07 01 02 01 ff ff
+    SMCIPMITOOL.exe %ip% %account% %pwd% ipmi raw 4 2 4 1 1 1 0 ff ff
+    SMCIPMITOOL.exe %ip% %account% %pwd% ipmi raw 4 2 4 2 24 1 4 ff ff
+    SMCIPMITOOL.exe %ip% %account% %pwd% ipmi raw 4 2 4 5 aa 8 0 ff ff
+    SMCIPMITOOL.exe %ip% %account% %pwd% ipmi raw 4 2 4 7 1 6f 1 ff ff
     @REM CATERR error
-    SMCIPMITOOL.exe %ip% ADMIN %pwd% ipmi raw 4 2 4 7 1 6f 0 ff ff
-    SMCIPMITOOL.exe %ip% ADMIN %pwd% ipmi raw 4 2 4 7 1 ef 0 ff ff
+    SMCIPMITOOL.exe %ip% %account% %pwd% ipmi raw 4 2 4 7 1 6f 0 ff ff
+    SMCIPMITOOL.exe %ip% %account% %pwd% ipmi raw 4 2 4 7 1 ef 0 ff ff
     cd /d D:\Script
 ) else (
     echo SMCIPMITool folder doesn't exist
