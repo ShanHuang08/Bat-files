@@ -75,6 +75,8 @@ if exist %SMC_Parent%\SMC* (
     @REM CATERR error
     SMCIPMITOOL.exe %ip% %account% %pwd% ipmi raw 4 2 4 7 1 6f 0 ff ff
     SMCIPMITOOL.exe %ip% %account% %pwd% ipmi raw 4 2 4 7 1 ef 0 ff ff
+    @REM BIOS error
+    SMCIPMITOOL.exe %ip% %account% %pwd% ipmi raw 4 2 20 4 cc fe 6f 7 ff ff
     cd /d D:\Script
 ) else (
     echo SMCIPMITool folder doesn't exist
