@@ -67,12 +67,15 @@ cd %SMC_Parent%
 if exist %SMC_Parent%\SMC* (
     echo Start generating HEL
     cd %SMC_Parent%\SMC*
+    @REM Temperture error
     SMCIPMITOOL.exe %ip% %account% %pwd% ipmi raw 0a 44 10 00 02 00 00 00 00 20 00 04 07 01 02 01 ff ff
+    SMCIPMITOOL.exe %ip% %account% %pwd% ipmi raw 0a 44 10 00 02 00 00 00 00 20 00 04 01 01 01 00 ff ff
     SMCIPMITOOL.exe %ip% %account% %pwd% ipmi raw 4 2 4 1 1 1 0 ff ff
+    @REM Voltage
     SMCIPMITOOL.exe %ip% %account% %pwd% ipmi raw 4 2 4 2 24 1 4 ff ff
     SMCIPMITOOL.exe %ip% %account% %pwd% ipmi raw 4 2 4 5 aa 8 0 ff ff
+    @REM CPU & CATERR error
     SMCIPMITOOL.exe %ip% %account% %pwd% ipmi raw 4 2 4 7 1 6f 1 ff ff
-    @REM CATERR error
     SMCIPMITOOL.exe %ip% %account% %pwd% ipmi raw 4 2 4 7 1 6f 0 ff ff
     SMCIPMITOOL.exe %ip% %account% %pwd% ipmi raw 4 2 4 7 1 ef 0 ff ff
     @REM BIOS error
