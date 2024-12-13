@@ -4,8 +4,10 @@ setlocal enabledelayedexpansion
 
 set SMC_Parent=C:\Users\Stephenhuang
 set /p ip= "BMC ip: "
+set /p account = "Input account: "
 set /p Uniqpwd= "Input Unique Password: "
 set pwd=ADMIN
+@REM set pwd=admin
 
 set "string=!ip:~0,3!"
 if "!string!"=="10." (
@@ -55,14 +57,14 @@ if exist %SMC_Parent%\SMC* (
         set "command=%%i"
         if %%i neq "ipmi raw 30 40" if %%i neq "ipmi fd 2" (
             echo Start executing !command:~1,-1!
-            SMCIPMITOOL.exe %ip% ADMIN %Uniqpwd% !command:~1,-1!
+            SMCIPMITOOL.exe %ip% %account% %Uniqpwd% !command:~1,-1!
         ) else (
             echo Start executing !command:~1,-1!
-            SMCIPMITOOL.exe %ip% ADMIN %pwd% !command:~1,-1!
+            SMCIPMITOOL.exe %ip% %account% %pwd% !command:~1,-1!
         )
         if %%i equ "ipmi raw 30 40" (
             echo Start executing !command:~1,-1!
-            SMCIPMITOOL.exe %ip% ADMIN %pwd% !command:~1,-1!
+            SMCIPMITOOL.exe %ip% %account% %pwd% !command:~1,-1!
         )
         timeout !sec!
         call :CheckMEL_pwd 
@@ -78,7 +80,7 @@ if exist %SMC_Parent%\SMC* (
 
 :CheckMEL_pwd    
 cd %SMC_Parent%\SMC*
-SMCIPMITOOL.exe %ip% ADMIN %pwd% mel list 10 > %SMC_Parent%\Mel_list.txt
+SMCIPMITOOL.exe %ip% %account% %pwd% mel list 10 > %SMC_Parent%\Mel_list.txt
 find "MEL-0056" %SMC_Parent%\Mel_list.txt > nul
 if %errorlevel% equ 0 (
     echo MEL-0056 has found
@@ -87,7 +89,7 @@ if %errorlevel% equ 0 (
 ) else (
     find "unauthorized" %SMC_Parent%\Mel_list.txt > nul
     if %errorlevel% equ 0 (
-        SMCIPMITOOL.exe %ip% ADMIN %Uniqpwd% mel list 10 > %SMC_Parent%\Mel_list.txt
+        SMCIPMITOOL.exe %ip% %account% %Uniqpwd% mel list 10 > %SMC_Parent%\Mel_list.txt
         find "MEL-0056" %SMC_Parent%\Mel_list.txt > nul
         if %errorlevel% equ 0 (
             echo MEL-0056 has found
