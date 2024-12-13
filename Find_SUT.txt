@@ -1,0 +1,5 @@
+TXT TEST
+Finding IPMI Devices ...
+  10.184.30.32         	 IPMI 2.0 ASPD_T IPMI+KVM
+Found hosts loaded
+1 IPMI device(s) found. Use "found" to list found devices
